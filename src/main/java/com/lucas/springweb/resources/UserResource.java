@@ -1,11 +1,16 @@
 package com.lucas.springweb.resources;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lucas.springweb.entities.User;
+import com.lucas.springweb.services.UserService;
 
 /*Um endpoint de um web service é a URL 
  * onde seu serviço pode ser acessado por uma aplicação cliente.
@@ -16,10 +21,21 @@ import com.lucas.springweb.entities.User;
 @RequestMapping(value= "/users")//
 public class UserResource {
 
+	@Autowired
+	private UserService service;
+	
 	/*acessar os usuarios*/
 	@GetMapping
-	public ResponseEntity<User> findAll(){
-		User u = new User(1L, "Maria", "Maria@gmail.com", "99999999", "123456");
-		return ResponseEntity.ok().body(u);
+	public ResponseEntity<List<User>> findAll(){
+		 List<User> list = service.findAll();
+		
+		return ResponseEntity.ok().body(list);
+	}
+	
+	/*end point buscar usuario por id*/
+	@GetMapping(value = "/{id}")
+	public ResponseEntity<User> findById(@PathVariable Long id){
+	User obj = service.findById(id);
+	return ResponseEntity.ok().body(obj);
 	}
 }
