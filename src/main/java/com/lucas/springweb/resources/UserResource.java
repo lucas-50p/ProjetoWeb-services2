@@ -54,7 +54,8 @@ public class UserResource {
 	}
 	/*end point deletar
 	 * noContent: vai retornar uma resposta vazia(204)
-	 * 500 erro: quando usuario tem pedidos associados(constraintViolationException)*/
+	 * 500 erro: quando usuario tem pedidos associados(constraintViolationException)
+	 * 404 ERRO: não encontrado*/
 	@DeleteMapping(value = "/{id}")
 	public ResponseEntity<Void> delete(@PathVariable long id){
 		service.delete(id);

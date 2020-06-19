@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.lucas.springweb.entities.User;
 import com.lucas.springweb.repositories.UserRepository;
+import com.lucas.springweb.services.exceptions.ResourceNotFoundException;
 
 /*
  * @Component	Anotação genérica para qualquer componente gerenciado pelo Spring. Esta anotação faz com que o bean registrado no Spring possa ser utilizado em qualquer bean, seja ele um serviço, um DAO, um controller, etc. No nosso exemplo, ele será responsável por um Bean que representa uma entidade.
@@ -25,9 +26,12 @@ public class UserService {
 		return repository.findAll();
 	}
 	
+	/*Atualizar user service: antes return obj.get(), 500 erro obj não encontrado;
+	 * mudei para orElseThrow: Ele vai tentar o get, se nõ tiver o usuario, vou lancar uma e exceção
+	 * orElseThrow((): expressão lambda */
 	public User findById(Long id){
 		Optional<User> obj = repository.findById(id);
-		return obj.get();
+		return obj.orElseThrow(() -> new ResourceNotFoundException(id));
 	}
 	
 	/*Salvar o usuario*/
