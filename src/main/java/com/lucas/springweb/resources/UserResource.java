@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -49,6 +50,14 @@ public class UserResource {
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/id")
 				.buildAndExpand(obj.getId()).toUri();
 		return ResponseEntity.created(uri).body(obj);
+	}
+	/*end point deletar
+	 * noContent: vai retornar uma resposta vazia(204)
+	 * 500 erro: quando usuario tem pedidos associados(constraintViolationException)*/
+	@DeleteMapping(value = "/{id}")
+	public ResponseEntity<Void> delete(@PathVariable long id){
+		service.delete(id);
+		return ResponseEntity.noContent().build();
 	}
 	
 }
