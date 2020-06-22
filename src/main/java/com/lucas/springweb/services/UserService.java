@@ -4,10 +4,13 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.lucas.springweb.entities.User;
 import com.lucas.springweb.repositories.UserRepository;
+import com.lucas.springweb.services.exceptions.DataBaseException;
 import com.lucas.springweb.services.exceptions.ResourceNotFoundException;
 
 /*
@@ -41,7 +44,15 @@ public class UserService {
 	
 	/*Deletar usuario*/
 	public void delete(long id) {
+		try {
 		repository.deleteById(id);
+		}catch(EmptyResultDataAccessException e) {
+			throw new ResourceNotFoundException(id);
+		}catch(DataIntegrityViolationException e) {
+			/*Exceção da camada de serviço*/
+			throw new DataBaseException(e.getMessage());
+		}
+	
 	}
 	
 	/*getOne ele vai instanciar o usuario, deixar monitorado pelo jpa, em seguida fazer uma operação no banco de dados*/
