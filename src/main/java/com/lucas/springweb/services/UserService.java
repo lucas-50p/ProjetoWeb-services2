@@ -3,6 +3,8 @@ package com.lucas.springweb.services;
 import java.util.List;
 import java.util.Optional;
 
+import javax.persistence.EntityNotFoundException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -58,9 +60,14 @@ public class UserService {
 	/*getOne ele vai instanciar o usuario, deixar monitorado pelo jpa, em seguida fazer uma operação no banco de dados*/
 	/*Atualizar usuario*/
 	public User update(long id, User obj) {
-		User entity = repository.getOne(id);
-		upadateData(entity, obj);
-		return repository.save(entity);
+		try {
+			User entity = repository.getOne(id);
+			upadateData(entity, obj);
+			return repository.save(entity);
+		}catch(EntityNotFoundException e) {
+			throw new ResourceNotFoundException(id);
+		}
+		
 	}
 
 	private void upadateData(User entity, User obj) {
